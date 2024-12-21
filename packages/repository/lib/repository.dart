@@ -1,3 +1,2 @@
-library;
-
-export 'src/repository_base.dart';
+export 'src/count_repository.dart';
+export 'src/util/result.dart';
