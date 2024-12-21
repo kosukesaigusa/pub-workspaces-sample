@@ -1,0 +1,16 @@
+name: service
+description: service package.
+version: 1.0.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.6.0
+resolution: workspace
+
+dependencies:
+  shared_preferences: ^2.3.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mockito: ^5.4.5
