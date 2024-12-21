@@ -1,0 +1,39 @@
+name: '[CI] Analyze'
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        package_path:
+          - packages/app
+          - packages/injection
+          - packages/repository
+          - packages/service
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Setup Flutter, Dart environment for CI.
+      - name: Setup CI
+        uses: ./.github/actions/setup
+
+      # Check format with dart format.
+      # If there is a difference, it will be an error.
+      - name: Check format
+        run: dart format -o none --set-exit-if-changed $(find lib/ test/ -name "*.dart" -not \( -name "*.*freezed.dart" -o -name "*.*g.dart" -o -name "*.*gr.dart" -o -name "*.*gen.dart" -o -name "*.*mocks.dart" \) )
+        working-directory: ${{ matrix.package_path }}
+
+      # Run static analysis with flutter analyze.
+      - name: Analyze
+        run: flutter analyze
+        working-directory: ${{ matrix.package_path }}
+
+      - name: Custom lint
+        run: dart run custom_lint
+        working-directory: ${{ matrix.package_path }}

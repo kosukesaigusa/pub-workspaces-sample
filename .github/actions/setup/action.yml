@@ -1,0 +1,51 @@
+name: Setup CI
+description: Setup Flutter, Dart environment for CI.
+
+runs:
+  using: composite
+  steps:
+    # Read Flutter SDK version from .fvmrc.
+    - name: Read Flutter SDK version
+      id: flutter_sdk_version
+      run: echo "version=$(jq -r '.flutter' .fvmrc)" >> $GITHUB_OUTPUT
+      shell: bash
+
+    # Setup Flutter SDK.
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2.8.0
+      with:
+        flutter-version: ${{ steps.flutter_sdk_version.outputs.version }}
+        channel: stable
+        cache: true
+        # Cache Flutter SDK if the same OS and Flutter SDK version.
+        cache-key: ${{ runner.OS }}-flutter-${{ steps.flutter_sdk_version.outputs.version }}
+
+    # Cache Pub dependencies.
+    - name: Cache Pub dependencies
+      id: cache-pub-dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ${{ env.FLUTTER_HOME }}/.pub-cache
+          **/.dart_tool
+          **/.flutter-plugins
+          **/.flutter-plugin-dependencies
+          **/pubspec.lock
+        key: ${{ runner.OS }}-pub-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          ${{ runner.OS }}-pub-
+
+    # Log cache status.
+    - name: Check Cache Status
+      run: |
+        if [ ${{ steps.cache-pub-dependencies.outputs.cache-hit }} == 'true' ]; then
+          echo "Cached dependencies found."
+        else
+          echo "Cache not found."
+        fi
+      shell: bash
+
+    # Install dependencies for pub workspaces
+    - name: Install Dependencies.
+      run: flutter pub get
+      shell: bash
