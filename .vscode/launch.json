@@ -3,7 +3,7 @@
   "configurations": [
     {
       "name": "Debug (Chrome)",
-      "program": "lib/main.dart",
+      "program": "packages/app/lib/main.dart",
       "request": "launch",
       "type": "dart",
       "deviceId": "${input:device}",

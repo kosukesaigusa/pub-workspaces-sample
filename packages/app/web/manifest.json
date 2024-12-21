@@ -1,6 +1,6 @@
 {
-    "name": "pub_workspaces_sample",
-    "short_name": "pub_workspaces_sample",
+    "name": "app",
+    "short_name": "app",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
