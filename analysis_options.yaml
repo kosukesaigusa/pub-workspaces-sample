@@ -40,3 +40,4 @@ linter:
     always_use_package_imports: false
     no_default_cases: false
     use_setters_to_change_properties: false
+    specify_nonobvious_local_variable_types: false
