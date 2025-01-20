@@ -1,3 +1,3 @@
 # pub_workspaces_sample
 
-A new Flutter project.
+A sample project for Pub workspaces. 
